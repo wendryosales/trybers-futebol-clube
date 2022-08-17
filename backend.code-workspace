@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "backend",
+			"path": "app/backend"
+		},
+		{
+			"name": "sd-019-a-trybe-futebol-clube",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
