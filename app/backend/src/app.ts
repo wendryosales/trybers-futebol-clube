@@ -1,15 +1,24 @@
 import * as express from 'express';
+import 'express-async-errors';
+import LoginController from './controller/login.controller';
+import ErrorHandling from './error/errorHandling';
 
 class App {
   public app: express.Express;
+  private _errorHandling: ErrorHandling;
+  private _loginController: LoginController;
 
   constructor() {
     this.app = express();
+    this._loginController = new LoginController();
+    this._errorHandling = new ErrorHandling();
 
     this.config();
 
     // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
+    this.app.post('/login', (req, res) => this._loginController.login(req, res));
+    this.app.use(this._errorHandling.middleware);
   }
 
   private config():void {
