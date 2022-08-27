@@ -7,17 +7,16 @@ dotenv.config();
 class AuthService {
   private payload: Payload;
   private secret: string;
-  constructor(payload: Payload, secret: string = process.env.JWT_SECRET as string) {
-    this.payload = payload;
+  constructor(secret: string = process.env.JWT_SECRET as string) {
     this.secret = secret;
   }
 
-  sign(): string {
-    return jwt.sign(this.payload, this.secret);
+  sign(payload: Payload): string {
+    return jwt.sign(payload, this.secret);
   }
 
-  verify(token: string): string | jwt.JwtPayload {
-    return jwt.verify(token, this.secret);
+  verify(token: string): Payload {
+    return jwt.verify(token, this.secret) as Payload;
   }
 }
 
