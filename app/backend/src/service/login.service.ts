@@ -29,14 +29,6 @@ class LoginService {
   }
 
   public async validateBody(body: IUser): Promise<IUser> {
-    const hasAttributes = (prop: string) : boolean => (
-      Object.prototype.hasOwnProperty.call(body, prop)
-    );
-
-    if (!hasAttributes('email') || !hasAttributes('password')) {
-      throw new GenericError('All fields must be filled', StatusCodes.BAD_REQUEST);
-    }
-
     const schema = Joi.object({
       email: Joi.string().required().email(),
       password: Joi.string().min(6).required(),
@@ -44,9 +36,11 @@ class LoginService {
     const { error, value } = schema.validate(body);
 
     if (error) {
+      if (error.message.includes('required') || error.message.includes('empty')) {
+        throw new GenericError('All fields must be filled', StatusCodes.BAD_REQUEST);
+      }
       throw new GenericError('Incorrect email or password', StatusCodes.UNAUTHORIZED);
     }
-
     this.body = value;
     return this.body;
   }
