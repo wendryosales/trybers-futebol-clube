@@ -2,7 +2,7 @@ class GenericError extends Error {
   private _code: number;
   private _name: string;
 
-  constructor(message: string, code: number, name: string) {
+  constructor(message: string, code: number, name = 'GenericError') {
     super(message);
     this._code = code;
     this._name = name;
