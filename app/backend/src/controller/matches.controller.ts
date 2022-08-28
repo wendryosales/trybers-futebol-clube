@@ -27,6 +27,18 @@ class MatchesController {
       .getMatchesInProgress(inProgress === 'true');
     return res.status(StatusCodes.OK).json(results);
   }
+
+  public async createMatch(req: Request, res: Response): Promise<Response> {
+    const { body } = req;
+    const result = await this._matchesService.createMatch(body);
+    return res.status(StatusCodes.OK).json(result);
+  }
+
+  public async updateMatch(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+    await this._matchesService.finishMatch(true, Number(id));
+    return res.status(StatusCodes.OK).json({ message: 'Finished' });
+  }
 }
 
 export default MatchesController;

@@ -1,22 +1,16 @@
 import * as express from 'express';
 import 'express-async-errors';
-import LoginController from './controller/login.controller';
-import MatchesController from './controller/matches.controller';
-import TeamsController from './controller/teams.controller';
 import ErrorHandling from './error/errorHandling';
+import loginRouter from './Router/login.router';
+import matchesRouter from './Router/matches.router';
+import teamsRouter from './Router/teams.router';
 
 class App {
   public app: express.Express;
   private _errorHandling: ErrorHandling;
-  private _loginController: LoginController;
-  private _teamsController: TeamsController;
-  private _matchesController: MatchesController;
 
   constructor() {
     this.app = express();
-    this._loginController = new LoginController();
-    this._teamsController = new TeamsController();
-    this._matchesController = new MatchesController();
     this._errorHandling = new ErrorHandling();
 
     this.config();
@@ -25,20 +19,15 @@ class App {
     this.app.get('/', (req, res) => res.json({ ok: true }));
 
     // Login
-    this.app.post('/login', (req, res) => this._loginController.login(req, res));
-    this.app.get('/login/validate', (req, res) => this._loginController.validate(req, res));
+    this.app.use('/login', loginRouter);
 
     // Teams
-    this.app.get('/teams', (req, res) => this._teamsController.getTeams(req, res));
-    this.app.get('/teams/:id', (req, res) => this._teamsController.getTeam(req, res));
+    this.app.use('/teams', teamsRouter);
 
     // Matches
-    this.app.get(
-      '/matches',
-      (req, res, next) => this._matchesController.getMatchesInProgress(req, res, next),
-      (req, res) => this._matchesController.getMatches(req, res),
-    );
+    this.app.use('/matches', matchesRouter);
 
+    // Error Handling
     this.app.use(this._errorHandling.middleware);
   }
 

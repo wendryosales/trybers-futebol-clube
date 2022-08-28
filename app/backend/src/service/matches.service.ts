@@ -4,6 +4,7 @@ import Team from '../database/models/team.model';
 class MatchesService {
   private _matches: Match[];
   private _matchesInProgress: Match[];
+  private _match: Match;
 
   public async getMatches(): Promise<Match[]> {
     this._matches = await Match.findAll({
@@ -42,6 +43,20 @@ class MatchesService {
       },
     });
     return this._matchesInProgress;
+  }
+
+  public async createMatch(match: Match): Promise<Match> {
+    this._match = await Match.create({ ...match, inProgress: true });
+    return this._match;
+  }
+
+  public async finishMatch(finish: boolean, id: number): Promise<[number, Match[]]> {
+    const status = await Match.update(
+      { inProgress: finish },
+      { where: { id } },
+    );
+    this._match = await Match.findByPk(id) as Match;
+    return status;
   }
 }
 
