@@ -45,13 +45,12 @@ class LoginService {
     return this.body;
   }
 
-  public async validateToken(token: string): Promise<string> {
-    const { stub } = this.authService.verify(token);
-    if (!stub) {
+  public async validateToken(token: string): Promise<User> {
+    const jwtData = this.authService.verify(token);
+    if (!jwtData) {
       throw new GenericError('Invalid token', StatusCodes.UNAUTHORIZED);
     }
-    const user = await User.findByPk(stub);
-    return user?.role as string;
+    return await User.findByPk(jwtData.stub) as User;
   }
 }
 

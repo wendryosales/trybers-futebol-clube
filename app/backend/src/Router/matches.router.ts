@@ -5,11 +5,12 @@ const router = Router();
 
 const matchesController = new MatchesController();
 
+router.patch('/:id/finish', (req, res) => matchesController.updateMatch(req, res));
 router.get(
   '/',
   (req, res, next) => matchesController.getMatchesInProgress(req, res, next),
   (req, res) => matchesController.getMatches(req, res),
 );
 router.post('/', (req, res) => matchesController.createMatch(req, res));
-router.patch('/:id/finish', (req, res) => matchesController.updateMatch(req, res));
+
 export default router;

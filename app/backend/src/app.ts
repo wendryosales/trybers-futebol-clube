@@ -17,18 +17,6 @@ class App {
 
     // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
-
-    // Login
-    this.app.use('/login', loginRouter);
-
-    // Teams
-    this.app.use('/teams', teamsRouter);
-
-    // Matches
-    this.app.use('/matches', matchesRouter);
-
-    // Error Handling
-    this.app.use(this._errorHandling.middleware);
   }
 
   private config():void {
@@ -41,6 +29,17 @@ class App {
 
     this.app.use(express.json());
     this.app.use(accessControl);
+    // Login
+    this.app.use('/login', loginRouter);
+
+    // Teams
+    this.app.use('/teams', teamsRouter);
+
+    // Matches
+    this.app.use('/matches', matchesRouter);
+
+    // Error Handling
+    this.app.use(this._errorHandling.middleware);
   }
 
   public start(PORT: string | number):void {
