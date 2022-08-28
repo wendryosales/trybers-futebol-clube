@@ -1,24 +1,33 @@
 import * as express from 'express';
 import 'express-async-errors';
 import LoginController from './controller/login.controller';
+import TeamsController from './controller/teams.controller';
 import ErrorHandling from './error/errorHandling';
 
 class App {
   public app: express.Express;
   private _errorHandling: ErrorHandling;
   private _loginController: LoginController;
+  private _teamsController: TeamsController;
 
   constructor() {
     this.app = express();
     this._loginController = new LoginController();
+    this._teamsController = new TeamsController();
     this._errorHandling = new ErrorHandling();
 
     this.config();
 
     // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
+
+    // Login
     this.app.post('/login', (req, res) => this._loginController.login(req, res));
     this.app.get('/login/validate', (req, res) => this._loginController.validate(req, res));
+
+    // Teams
+    this.app.get('/teams', (req, res) => this._teamsController.getTeams(req, res));
+    this.app.get('/teams/:id', (req, res) => this._teamsController.getTeam(req, res));
     this.app.use(this._errorHandling.middleware);
   }
 
