@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import GenericError from '../error/generic.error';
 import AuthService from '../service/auth.service';
 import MatchesService from '../service/matches.service';
 
@@ -39,19 +38,14 @@ class MatchesController {
     req: Request,
     res: Response,
   ): Promise<Response | void> {
-    const jwtData = this._authService.verify(req.headers.authorization as string);
-    if (!jwtData) {
-      throw new GenericError('Invalid token', StatusCodes.UNAUTHORIZED);
-    }
-    const result = await this._matchesService.createMatch(req.body);
+    this._authService.verify(req.headers.authorization as string);
+    await this._matchesService.validateMatch(req.body);
+    const result = await this._matchesService.createMatch();
     return res.status(StatusCodes.CREATED).json(result);
   }
 
   public async finishMatch(req: Request, res: Response): Promise<Response> {
-    const jwtData = this._authService.verify(req.headers.authorization as string);
-    if (!jwtData) {
-      throw new GenericError('Invalid token', StatusCodes.UNAUTHORIZED);
-    }
+    this._authService.verify(req.headers.authorization as string);
     const { id } = req.params;
     await this._matchesService.finishMatch(Number(id));
     return res.status(StatusCodes.OK).json({ message: 'Finished' });

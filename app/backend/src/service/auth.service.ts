@@ -1,5 +1,7 @@
 import dotenv = require('dotenv');
+import { StatusCodes } from 'http-status-codes';
 import jwt = require('jsonwebtoken');
+import GenericError from '../error/generic.error';
 import { Payload } from '../types/Payload';
 
 dotenv.config();
@@ -14,11 +16,11 @@ class AuthService {
     return jwt.sign(payload, this.secret);
   }
 
-  verify(token: string): Payload | null {
+  verify(token: string): Payload | undefined {
     try {
       return jwt.verify(token, this.secret) as Payload;
     } catch (error) {
-      return null;
+      throw new GenericError('Token must be a valid token', StatusCodes.UNAUTHORIZED);
     }
   }
 }
