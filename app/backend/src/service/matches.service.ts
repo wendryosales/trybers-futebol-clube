@@ -50,9 +50,9 @@ class MatchesService {
     return this._match;
   }
 
-  public async finishMatch(finish: boolean, id: number): Promise<[number, Match[]]> {
+  public async finishMatch(id: number): Promise<[number, Match[]]> {
     const status = await Match.update(
-      { inProgress: finish },
+      { inProgress: false },
       { where: { id } },
     );
     this._match = await Match.findByPk(id) as Match;

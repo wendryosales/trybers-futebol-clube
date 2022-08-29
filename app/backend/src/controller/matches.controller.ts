@@ -47,13 +47,13 @@ class MatchesController {
     return res.status(StatusCodes.CREATED).json(result);
   }
 
-  public async updateMatch(req: Request, res: Response): Promise<Response> {
+  public async finishMatch(req: Request, res: Response): Promise<Response> {
     const jwtData = this._authService.verify(req.headers.authorization as string);
     if (!jwtData) {
       throw new GenericError('Invalid token', StatusCodes.UNAUTHORIZED);
     }
     const { id } = req.params;
-    await this._matchesService.finishMatch(true, Number(id));
+    await this._matchesService.finishMatch(Number(id));
     return res.status(StatusCodes.OK).json({ message: 'Finished' });
   }
 }

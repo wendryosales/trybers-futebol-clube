@@ -5,7 +5,7 @@ const router = Router();
 
 const matchesController = new MatchesController();
 
-router.patch('/:id/finish', (req, res) => matchesController.updateMatch(req, res));
+router.patch('/:id/finish', (req, res) => matchesController.finishMatch(req, res));
 router.get(
   '/',
   (req, res, next) => matchesController.getMatchesInProgress(req, res, next),
