@@ -50,6 +50,13 @@ class MatchesController {
     await this._matchesService.finishMatch(Number(id));
     return res.status(StatusCodes.OK).json({ message: 'Finished' });
   }
+
+  public async updateMatch(req: Request, res: Response): Promise<Response> {
+    this._authService.verify(req.headers.authorization as string);
+    const { id } = req.params;
+    const match = await this._matchesService.updateMatch(Number(id), req.body);
+    return res.status(StatusCodes.OK).json(match);
+  }
 }
 
 export default MatchesController;

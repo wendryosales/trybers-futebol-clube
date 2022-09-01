@@ -74,8 +74,8 @@ describe('⚽Endpoint /matches', () => {
         .set('Authorization', chaiLogin.body.token)
         .send({
           ...oneMatchMock,
-          teamHome: 1,
-          teamAway: 1,
+          homeTeam: 1,
+          awayTeam: 1,
         });
       expect(chaiHttpResponse.status).to.equal(401);
     }),
@@ -110,6 +110,28 @@ describe('⚽Endpoint /matches', () => {
       .set('Authorization', chaiLogin.body.token)
       expect(chaiHttpResponse.status).to.equal(200);
       expect(chaiHttpResponse.body).to.haveOwnProperty('message')
+    })
+  })
+  describe('PATCH /matches/:id', () => {
+    afterEach(async () => {
+      sinon.restore();
+    }),
+    it('update a match', async () => {
+      sinon.stub(User, 'findOne').resolves(await mockFindOne() as User);
+      sinon.stub(User, 'findByPk').resolves(await mockFindOne() as User);
+      const chaiLogin = await chai.request(app).post('/login').send(userLogin);
+
+      sinon.stub(Match, 'findByPk').resolves(matchesMock[0] as unknown as Match);
+      chaiHttpResponse = await chai.request(app)
+      .patch('/matches/1')
+      .set('Authorization', chaiLogin.body.token)
+      .send(
+        {
+          homeTeamGoals: 3,
+          awayTeamGoals: 1
+        }
+      )
+      expect(chaiHttpResponse.status).to.equal(500);
     })
   })
 })

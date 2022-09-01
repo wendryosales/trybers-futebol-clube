@@ -66,6 +66,20 @@ class MatchesService {
     return status;
   }
 
+  public async updateMatch(id:number, update: Match): Promise<Match> {
+    const match = await Match.findByPk(id);
+    if (!match) {
+      throw new GenericError(
+        'There is no match with such id!',
+        StatusCodes.NOT_FOUND,
+      );
+    }
+    match.homeTeamGoals = update.homeTeamGoals;
+    match.awayTeamGoals = update.awayTeamGoals;
+    this._match = match;
+    return match.save();
+  }
+
   public async validateMatch(match: Match): Promise<Match> {
     if (match.homeTeam === match.awayTeam) {
       throw new GenericError(
